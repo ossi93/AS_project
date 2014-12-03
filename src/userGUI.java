@@ -1,9 +1,11 @@
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by rostwald on 01.12.2014.
  */
+
 public class userGUI extends JFrame {
     private JButton bt_searchInvID;
     private JButton bt_searchEmpID;
@@ -41,20 +43,76 @@ public class userGUI extends JFrame {
         tf_EmpID.setBounds(10,120,200,25);
 
 
-        // Adding Elements to JPanel
+        // Adding Elements to Window
         this.getContentPane().add(lb_EmpID);
         this.getContentPane().add(lb_InvID);
         this.getContentPane().add(bt_searchInvID);
         this.getContentPane().add(bt_searchEmpID);
         this.getContentPane().add(tf_InvID);
         this.getContentPane().add(tf_EmpID);
-
         this.pack();
 
         // Moving GUI to Center
         this.setLocationRelativeTo(null);
 
+        // ActionListener to bt_searchEmpID
+        bt_searchEmpID.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchEmpID_clicked();
+            }
+        });
+
+        // ActionListener to bt_searchInvID
+        bt_searchInvID.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchInvID_clicked();
+            }
+        });
+    }  // End of UserGUI Constructor
+
+/// Action performed, when bt_searchEmpID is clicked
+    public void searchEmpID_clicked() {
+        double empID;
+        try {
+            empID = Double.parseDouble(tf_EmpID.getText());
+        } catch (NumberFormatException e) {
+            empID = 0;
+        }
+        if (empID == 0) {
+            System.out.println("Please enter a valid Employee ID");
+        }
+        else {
+            getEmpID(empID);
+        }
     }
+
+    // Get Employee ID
+    public double getEmpID(double empID) {
+        return empID;
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Action performed, when bt_searchInvID is clicked
+    public void searchInvID_clicked() {
+        double invID;
+        try {
+            invID = Double.parseDouble(tf_InvID.getText());
+        } catch (NumberFormatException e) {
+            invID = 0;
+        }
+        if (invID == 0) {
+            System.out.println("Please enter a valid Inventory ID");
+        } else {
+            getInvID(invID);
+        }
+    }
+    // Get Inventory ID
+    public double getInvID(double invID) {
+        return invID;
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
         userGUI mainGUI = new userGUI();
@@ -62,4 +120,6 @@ public class userGUI extends JFrame {
         mainGUI.show();
 
     }
+
+
 }
