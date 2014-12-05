@@ -1,6 +1,9 @@
+import sun.util.resources.TimeZoneNames_zh_CN;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 /**
  * Created by rostwald on 01.12.2014.
@@ -14,8 +17,14 @@ public class userGUI extends JFrame {
     private JTextField tf_EmpID;
     private JTextField tf_InvID;
 
+    // Creating Object of DBConnector-class, providing connectionString and SQL user credentials
+    DBConnector obj_db = new DBConnector("jdbc:sqlserver://DEFR2APP31\\BO_TEST;databaseName=Test", "asproject", "Blumen99");
+    // Save connection as an object to "conn"
+    Connection conn = obj_db.connectToMSSQL();
+
     public userGUI() {
 
+        // Name of Window (top left)
         super("InventO - Alpha");
 
         // Close on [X} Press
@@ -84,13 +93,8 @@ public class userGUI extends JFrame {
             System.out.println("Please enter a valid Employee ID");
         }
         else {
-            getEmpID(empID);
+            obj_db.getEmpByID(conn, empID);
         }
-    }
-
-    // Get Employee ID
-    public double getEmpID(double empID) {
-        return empID;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,12 +109,8 @@ public class userGUI extends JFrame {
         if (invID == 0) {
             System.out.println("Please enter a valid Inventory ID");
         } else {
-            getInvID(invID);
+            obj_db.getItemByID(conn, invID);
         }
-    }
-    // Get Inventory ID
-    public double getInvID(double invID) {
-        return invID;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

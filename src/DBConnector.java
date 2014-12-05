@@ -1,3 +1,4 @@
+import javax.xml.transform.Result;
 import java.lang.*;
 import java.sql.*;
 
@@ -7,6 +8,9 @@ public class DBConnector {
     public String password;
     public String user;
     public String connectionString;
+    Connection conn = null;
+    PreparedStatement prepQ = null;
+    ResultSet rsSet = null;
 
     // Constructor
     public DBConnector() {
@@ -41,26 +45,65 @@ public class DBConnector {
     }
 
     // Connect to Database
-    public void connectToMSSQL() {
+    public Connection connectToMSSQL() {
+        Connection sqlDBCon = null;
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            Connection sqlDBCon = DriverManager.getConnection(connectionString, user, password);
+            sqlDBCon = DriverManager.getConnection(connectionString, user, password);
             System.out.println("connected to " + connectionString);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+        return sqlDBCon;
     }
 
-    // Database Querys
-    public boolean getItemByID(double id) {
-
-        return false;
+/// Database Querys ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void getEmpByID(Connection conn, double id) {
+        // Setting Query
+        String query = "SELECT * FROM T_EMP WHERE EMP_ID = ?";
+        try {
+            prepQ = conn.prepareStatement(query);
+            // Replace "?" in Query
+            prepQ.setDouble(1, id);
+            // Save Result in rsSet
+            rsSet = prepQ.executeQuery();
+            // If result is not empty
+            if (rsSet != null && rsSet.next()) {
+                System.out.println(rsSet.getString("EMP_ID") + " | " + rsSet.getString("Name") + " | " + rsSet.getString("PreName"));
+                prepQ.close();
+            }
+            else {
+                System.out.println("EMP ID does not exist");
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
-    public boolean getRowsByValue(double String) {
+    public void getItemByID(Connection conn, double id) {
+        // Setting Query
+        String query = "SELECT * FROM T_INV WHERE INV_ID = ?";
+        try {
+            prepQ = conn.prepareStatement(query);
+            // Replace "?" in Query
+            prepQ.setDouble(1, id);
+            // Save Result in rsSet
+            rsSet = prepQ.executeQuery();
+            // If result is not empty
+            if (rsSet != null && rsSet.next()) {
+                System.out.println(rsSet.getString("INV_ID") + " | " + rsSet.getString("Name") + " | " + rsSet.getString("Type"));
+                prepQ.close();
+            }
+            else {
+                System.out.println("INV ID does not exist");
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
 
-        return false;
     }
 
     public boolean createItem() {return false;}
@@ -68,6 +111,9 @@ public class DBConnector {
     public boolean deleteItem() {return true;}
 
     public boolean setEmp() {return true;}
+
+
+
 }
 
 
